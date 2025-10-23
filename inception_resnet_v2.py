@@ -13,7 +13,7 @@ import torchinfo
 import torchvision.models as models
 import timm
 
-device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class BasicConv2d(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, padding, stride=1, bias=True) -> None:
@@ -333,6 +333,7 @@ def train_model(model, train_dataloader, val_dataloader, criterion, scheduler, o
   
 def test_model(net, dataloader, criterion, num_epochs) :
   net.eval()
+  net.lo
   accuracy_list = []
   loss_list = []
 
@@ -411,6 +412,10 @@ if len(model_keys) == len(pre_trained_values):
 
 model.load_state_dict(new_state_dict)
 
+#마지막 FC layer 수정
+num_ftrs = model.linear.in_features
+model.linear = nn.Linear(num_ftrs, 10)
+
 model = model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.RMSprop(model.parameters(), lr=learning_rate, alpha = 0.9, eps = 1.0)
@@ -445,5 +450,5 @@ plt.show()
 #torchinfo.summary(model, input_size=(1, 3, 224, 224))
 test_acc, test_loss = test_model(model, test_dataloader, criterion, num_epochs=1)
 
-model = Inception_Resnet_V2(num_classes=1000, in_channels=3)
-print(len(model.state_dict().keys()))
+# model = Inception_Resnet_V2(num_classes=1000, in_channels=3)
+# print(len(model.state_dict().keys()))
