@@ -333,7 +333,7 @@ def train_model(model, train_dataloader, val_dataloader, criterion, scheduler, o
   
 def test_model(net, dataloader, criterion, num_epochs) :
   net.eval()
-  net.lo
+  net.load_state_dict(torch.load('best_model_checkpoint1.pth'))
   accuracy_list = []
   loss_list = []
 
@@ -355,8 +355,8 @@ def test_model(net, dataloader, criterion, num_epochs) :
             epoch_test_loss += loss.item() * inputs.size(0)
             epoch_test_corrects += torch.sum(preds == labels.data)
 
-        epoch_test_loss = epoch_test_loss / len(dataloader.datasets)
-        epoch_acc = epoch_test_corrects.double() / len(dataloader.datasets)
+        epoch_test_loss = epoch_test_loss / len(dataloader.dataset)
+        epoch_acc = epoch_test_corrects.double() / len(dataloader.dataset)
 
         print(f'Loss: {epoch_test_loss:.4f} Acc: {epoch_acc:.4f}')
 
